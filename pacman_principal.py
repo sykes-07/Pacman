@@ -26,8 +26,7 @@ musica = pygame.mixer.music.load(
 pygame.mixer.music.play(-1)
 
 # carregando a imagem da sprite
-spriteSheet = pygame.image.load(os.path.join(
-    pasta_imagens, 'pacman_sprite.png')).convert_alpha()
+spriteSheet = pygame.image.load(os.path.join(pasta_imagens, 'pacman_sprite.png')).convert_alpha()
 
 # gerando o piso do jogo
 
@@ -135,9 +134,34 @@ class Inimigo_vermelho(pygame.sprite.Sprite):
 
 
 # inimigo rosa
-class Inimigo_rosa:
+class Inimigo_rosa(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
+        self.imagens_rosa = []
+        for i in range(5, 7):
+            img = spriteSheet.subsurface((i * 32, 0), (32, 32))
+            img = pygame.transform.scale(img, (32*3, 32*3))
+            self.imagens_rosa.append(img)
+
+        self.i_lista = 0
+        self.image = self.imagens_rosa[self.i_lista]
+        self.rect = self.image.get_rect()
+        self.mask = pygame.mask.from_surface(self.image)
+        self.rect.center = (variaveis.largura, variaveis.altura-49)
+
+    def update(self):
+        if self.rect.topright[0] < 0:
+            self.rect.x = variaveis.largura
+        self.rect.x -= 7
+
+ 
+        if self.i_lista > 1:
+            self.i_lista = 0
+        self.i_lista += 0.09
+        self.image = self.imagens_rosa[int(self.i_lista)]
+
+
+        
 
 
 # inimigo amarelo
@@ -153,7 +177,7 @@ class Inimigo_azul(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
 
 
-# adcioando o pacman
+# gerando o pacman
 grupo_imagens = pygame.sprite.Group()
 pacman = Pacman()
 grupo_imagens.add(pacman)
@@ -165,8 +189,16 @@ grupo_imagens.add(moeda)
 grupo_moeda = pygame.sprite.Group()
 grupo_moeda.add(moeda)
 
+# gerando inimigo vermelho  
 inimigo_vermelho = Inimigo_vermelho()
 grupo_imagens.add(inimigo_vermelho)
+
+#gerando inimigo rosa 
+inimigo_rosa = Inimigo_rosa()
+grupo_imagens.add(inimigo_rosa)
+
+#gerando inimogo 
+
 
 # gerando o piso e quantos pisos cabem na tela
 for i in range(variaveis.largura*2//64):
@@ -191,8 +223,7 @@ while True:
                 else:
                     pacman.pular()
 
-    colisão_moeda = pygame.sprite.spritecollide(
-        pacman, grupo_moeda, True, pygame.sprite.collide_mask)
+    colisão_moeda = pygame.sprite.spritecollide(pacman, grupo_moeda, True, pygame.sprite.collide_mask)
 
     # adcionar sprite na tela
     grupo_imagens.draw(tela)
