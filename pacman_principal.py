@@ -1,8 +1,10 @@
 import pygame
 from pygame.locals import *
 from sys import exit
-import os  # importar pastas
+import random
+import os  
 import variaveis
+
 
 pygame.init()
 pygame.mixer.init()
@@ -73,12 +75,14 @@ class Pacman(pygame.sprite.Sprite):
     # metodo de atualização do pacman
     def update(self):
         if self.pulo == True:
-            if self.rect.y <= 200:
+            if self.rect.y <= 210:
                 self.pulo = False
             self.rect.y -= 20
+            self.rect.x += 1
         else:
             if self.rect.y < self.y_inicial:
                 self.rect.y += 20
+                self.rect.x += 1
             else:
                 self.rect.y = self.y_inicial
 
@@ -86,7 +90,7 @@ class Pacman(pygame.sprite.Sprite):
             self.i_lista = 0
         self.i_lista += 0.25
         self.image = self.imagens_pacman[int(self.i_lista)]
-
+ 
 
 # criando as moedas
 class Moedas(pygame.sprite.Sprite):
@@ -168,13 +172,56 @@ class Inimigo_rosa(pygame.sprite.Sprite):
 class Inimigo_amarelo(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
+        self.imagens_amarelo = []
+        for i in range(7, 9):
+            img = spriteSheet.subsurface((i * 32, 0), (32, 32))
+            img = pygame.transform.scale(img, (32*3, 32*3))
+            self.imagens_amarelo.append(img)
+
+        self.i_lista = 0
+        self.image = self.imagens_amarelo[self.i_lista]
+        self.rect = self.image.get_rect()
+        self.mask = pygame.mask.from_surface(self.image)
+        self.rect.center = (variaveis.largura, variaveis.altura-49)
+
+    def update(self):
+        if self.rect.topright[0] < 0:
+            self.rect.x = variaveis.largura
+        self.rect.x -= 7
+
+ 
+        if self.i_lista > 1:
+            self.i_lista = 0
+        self.i_lista += 0.09
+        self.image = self.imagens_amarelo[int(self.i_lista)]
 
 # inimigo azul
-
-
 class Inimigo_azul(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
+        self.imagens_azul = []
+        for i in range(9, 11):
+            img = spriteSheet.subsurface((i * 32, 0), (32, 32))
+            img = pygame.transform.scale(img, (32*3, 32*3))
+            self.imagens_azul.append(img)
+
+        self.i_lista = 0
+        self.image = self.imagens_azul[self.i_lista]
+        self.rect = self.image.get_rect()
+        self.mask = pygame.mask.from_surface(self.image)
+        self.rect.center = (variaveis.largura, variaveis.altura-49)
+    
+    def update(self):
+        if self.rect.topright[0] < 0:
+            self.rect.x = variaveis.largura
+        self.rect.x -= 7
+
+ 
+        if self.i_lista > 1:
+            self.i_lista = 0
+        self.i_lista += 0.09
+        self.image = self.imagens_azul[int(self.i_lista)]
+
 
 
 # gerando o pacman
@@ -197,7 +244,14 @@ grupo_imagens.add(inimigo_vermelho)
 inimigo_rosa = Inimigo_rosa()
 grupo_imagens.add(inimigo_rosa)
 
-#gerando inimogo 
+#gerando inimigo amarelo 
+inimigo_amarelo = Inimigo_amarelo()
+grupo_imagens.add(inimigo_amarelo)
+
+#gerando inimigo azul
+inimigo_azul = Inimigo_azul()
+grupo_imagens.add(inimigo_azul)
+
 
 
 # gerando o piso e quantos pisos cabem na tela
@@ -223,7 +277,7 @@ while True:
                 else:
                     pacman.pular()
 
-    colisão_moeda = pygame.sprite.spritecollide(pacman, grupo_moeda, True, pygame.sprite.collide_mask)
+    #colisão_moeda = pygame.sprite.spritecollide(pacman, grupo_moeda, True, pygame.sprite.collide_mask)
 
     # adcionar sprite na tela
     grupo_imagens.draw(tela)
