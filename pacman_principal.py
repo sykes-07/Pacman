@@ -246,6 +246,29 @@ class Inimigo_azul(pygame.sprite.Sprite):
             self.image = self.imagens_azul[int(self.i_lista)]
 
 
+#atualizar a aleatoriedade dos inimigos 
+def ale():
+    aleatoriedade = random.choice(["moedinha", "vermelho", "rosa", "amarelo", "azul"])
+    moeda.rect.x = variaveis.largura
+    moeda.aleatorio = aleatoriedade
+    inimigo_vermelho.rect.x = variaveis.largura
+    inimigo_vermelho.aleatorio = aleatoriedade
+    inimigo_azul.rect.x = variaveis.largura
+    inimigo_azul.aleatorio = aleatoriedade
+    inimigo_rosa.rect.x = variaveis.largura
+    inimigo_rosa.aleatorio = aleatoriedade
+    inimigo_amarelo.rect.x = variaveis.largura
+    inimigo_amarelo.aleatorio = aleatoriedade
+
+def pontos_tela(pontuação, tamanho, cor):
+    fonte_jogo = pygame.font.SysFont("comicsansms", tamanho, True, False)
+    mensagem_tela = f"{pontuação}"
+    pontos_forma = fonte_jogo.render(mensagem_tela, True, cor)
+    return pontos_forma
+
+
+
+
 # grupos
 grupo_imagens = pygame.sprite.Group()
 inimigos = pygame.sprite.Group()
@@ -280,20 +303,6 @@ inimigos.add(inimigo_amarelo)
 inimigo_azul = Inimigo_azul()
 grupo_imagens.add(inimigo_azul)
 inimigos.add(inimigo_azul)
-
-#atualizar a aleatoriedade dos inimigos 
-def ale():
-    aleatoriedade = random.choice(["moedinha", "vermelho", "rosa", "amarelo", "azul"])
-    moeda.rect.x = variaveis.largura
-    moeda.aleatorio = aleatoriedade
-    inimigo_vermelho.rect.x = variaveis.largura
-    inimigo_vermelho.aleatorio = aleatoriedade
-    inimigo_azul.rect.x = variaveis.largura
-    inimigo_azul.aleatorio = aleatoriedade
-    inimigo_rosa.rect.x = variaveis.largura
-    inimigo_rosa.aleatorio = aleatoriedade
-    inimigo_amarelo.rect.x = variaveis.largura
-    inimigo_amarelo.aleatorio = aleatoriedade
 
 
 
@@ -338,17 +347,16 @@ while True:
     colidindo = pygame.sprite.spritecollide(pacman, inimigos, False, pygame.sprite.collide_mask)
     colidindo_moeda = pygame.sprite.spritecollide(pacman, pontinhos, True, pygame.sprite.collide_mask)
 
-    if colidindo_moeda:
-        variaveis.pontos.append(1) 
+    if colidindo_moeda:  
         ale()
         grupo_imagens.update()   
 
     if colidindo:  
         pass  
     else:
-        # ficar atualizando as sprite
         grupo_imagens.update()
-     
+    
 
     # atualizar a tela
     pygame.display.flip()
+ 

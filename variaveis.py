@@ -3,6 +3,7 @@
 largura = 640
 altura  = 480
 preto = (0,0,0)
+branco = (255,255,255)
 
 fps = 30
 
