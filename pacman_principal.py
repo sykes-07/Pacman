@@ -261,7 +261,7 @@ def ale():
     inimigo_amarelo.aleatorio = aleatoriedade
 
 def pontos_tela(pontuação, tamanho, cor):
-    fonte_jogo = pygame.font.SysFont("comicsansms", tamanho, True, False)
+    fonte_jogo = pygame.font.SysFont("arial", tamanho, True, False)
     mensagem_tela = f"{pontuação}"
     pontos_forma = fonte_jogo.render(mensagem_tela, True, cor)
     return pontos_forma
