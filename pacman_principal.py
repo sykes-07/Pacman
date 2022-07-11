@@ -1,4 +1,3 @@
-from cmath import rect
 import pygame
 from pygame.locals import *
 from sys import exit
@@ -17,6 +16,7 @@ pasta_imagens = os.path.join(pasta_principal, 'imagens')
 pasta_sons = os.path.join(pasta_principal, 'sons')
 
 
+
 # configuração da tela
 
 tela = pygame.display.set_mode((variaveis.largura, variaveis.altura))
@@ -24,7 +24,7 @@ pygame.display.set_caption(variaveis.nome_do_jogo)
 
 
 
-aleatoriedade = random.choice(["moedinha", "vermelho", "rosa", "amarelo", "azul"])
+aleatoriedade = random.choice(variaveis.npc)
 # configuração da musica de fundo
 
 musica = pygame.mixer.music.load(os.path.join(pasta_sons, variaveis.musica_fundo))
@@ -50,7 +50,7 @@ class Piso(pygame.sprite.Sprite):
     def update(self):
         if self.rect.topright[0] < 0:
             self.rect.x = variaveis.largura
-        self.rect.x -= 7
+        self.rect.x -= variaveis.velocidade
 
 # criando o pacman
 
@@ -106,19 +106,20 @@ class Moedas(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.image = spriteSheet.subsurface((12 * 32, 0), (32, 32))
-        self.image = pygame.transform.scale(self.image, (32*2.7, 32*2.7))
+        self.image = pygame.transform.scale(self.image, (32*3, 32*3))
+        self.aleatorio = aleatoriedade
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.rect.center = (variaveis.largura, variaveis.altura-60)
         self.rect.x = variaveis.largura
-        self.aleatorio = aleatoriedade
+        
 
   # fazer a moeda reiniciar na tela
     def update(self):
-        if self.aleatorio == "moedinha" :
+        if self.aleatorio == "moedinha":
             if self.rect.topright[0] < 0:
                 self.rect.x = variaveis.largura
-            self.rect.x -= 7
+            self.rect.x -= variaveis.velocidade
 
 
 # inimigo vermelho
@@ -130,22 +131,23 @@ class Inimigo_vermelho(pygame.sprite.Sprite):
         for i in range(3, 5):
             img = spriteSheet.subsurface((i * 32, 0), (32, 32))
             
-            img = pygame.transform.scale(img, (32*2.6, 32*2.6))
+            img = pygame.transform.scale(img, (32*2.9, 32*2.9))
             self.imagens_vermelho.append(img)
 
         self.i_lista = 0
         self.image = self.imagens_vermelho[self.i_lista]
         self.rect = self.image.get_rect()
+        self.aleatorio = aleatoriedade
         self.mask = pygame.mask.from_surface(self.image)
         self.rect.center = (variaveis.largura, variaveis.altura-49)
         self.rect.x = variaveis.largura
-        self.aleatorio = aleatoriedade
+        
 
     def update(self):
         if self.aleatorio == "vermelho":
             if self.rect.topright[0] < 0:
                 self.rect.x = variaveis.largura
-            self.rect.x -= 7
+            self.rect.x -= variaveis.velocidade
 
             if self.i_lista > 1:
                 self.i_lista = 0
@@ -160,22 +162,23 @@ class Inimigo_rosa(pygame.sprite.Sprite):
         self.imagens_rosa = []
         for i in range(5, 7):
             img = spriteSheet.subsurface((i * 32, 0), (32, 32))
-            img = pygame.transform.scale(img, (32*2.6, 32*2.6))
+            img = pygame.transform.scale(img, (32*2.9, 32*2.9))
             self.imagens_rosa.append(img)
 
         self.i_lista = 0
         self.image = self.imagens_rosa[self.i_lista]
         self.rect = self.image.get_rect()
+        self.aleatorio = aleatoriedade
         self.mask = pygame.mask.from_surface(self.image)
         self.rect.center = (variaveis.largura, variaveis.altura-49)
         self.rect.x = variaveis.largura
-        self.aleatorio = aleatoriedade
+        
 
     def update(self):
         if self.aleatorio == "rosa":
             if self.rect.topright[0] < 0:
                 self.rect.x = variaveis.largura
-            self.rect.x -= 7
+            self.rect.x -= variaveis.velocidade
 
     
             if self.i_lista > 1:
@@ -190,11 +193,12 @@ class Inimigo_amarelo(pygame.sprite.Sprite):
         self.imagens_amarelo = []
         for i in range(7, 9):
             img = spriteSheet.subsurface((i * 32, 0), (32, 32))
-            img = pygame.transform.scale(img, (32*2.6, 32*2.6))
+            img = pygame.transform.scale(img, (32*2.9, 32*2.9))
             self.imagens_amarelo.append(img)
 
         self.i_lista = 0
         self.image = self.imagens_amarelo[self.i_lista]
+        self.aleatorio = aleatoriedade
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect.center = (variaveis.largura, variaveis.altura-49)
@@ -206,7 +210,7 @@ class Inimigo_amarelo(pygame.sprite.Sprite):
         if self.aleatorio == "amarelo":
             if self.rect.topright[0] < 0:
                 self.rect.x = variaveis.largura
-            self.rect.x -= 7
+            self.rect.x -= variaveis.velocidade
 
     
             if self.i_lista > 1:
@@ -221,35 +225,43 @@ class Inimigo_azul(pygame.sprite.Sprite):
         self.imagens_azul = []
         for i in range(9, 11):
             img = spriteSheet.subsurface((i * 32, 0), (32, 32))
-            img = pygame.transform.scale(img, (32*2.6, 32*2.6 ))
+            img = pygame.transform.scale(img, (32*2.9, 32*2.9 ))
             self.imagens_azul.append(img)
 
         self.i_lista = 0
         self.image = self.imagens_azul[self.i_lista]
+        self.aleatorio = aleatoriedade
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect.center = (variaveis.largura, variaveis.altura-49)
         self.rect.x = variaveis.largura
-        self.aleatorio = aleatoriedade
+        
 
     
     def update(self):
         if self.aleatorio == "azul":
             if self.rect.topright[0] < 0:
                 self.rect.x = variaveis.largura
-            self.rect.x -= 7
+            self.rect.x -= variaveis.velocidade
 
  
             if self.i_lista > 1:
-                self.i_lista = 0
+                self.i_lista = 0   
             self.i_lista += 0.09
             self.image = self.imagens_azul[int(self.i_lista)]
 
+#grupos
+grupo_imagens = pygame.sprite.Group()
+inimigos = pygame.sprite.Group()
+pontinhos = pygame.sprite.Group()
 
-#atualizar a aleatoriedade dos inimigos 
+#atualizar a aleatoriedade dos inimigos e da moeda
 def ale():
-    aleatoriedade = random.choice(["moedinha", "vermelho", "rosa", "amarelo", "azul"])
-    moeda.rect.x = variaveis.largura
+    moeda = Moedas()
+    grupo_imagens.add(moeda)
+    pontinhos.add(moeda)
+    aleatoriedade = random.choice(variaveis.npc)
+    moeda.rect.x = variaveis.largura  
     moeda.aleatorio = aleatoriedade
     inimigo_vermelho.rect.x = variaveis.largura
     inimigo_vermelho.aleatorio = aleatoriedade
@@ -260,19 +272,15 @@ def ale():
     inimigo_amarelo.rect.x = variaveis.largura
     inimigo_amarelo.aleatorio = aleatoriedade
 
-def pontos_tela(pontuação, tamanho, cor):
+
+
+#textos 
+
+def textinho_tela(pontuação, tamanho, cor):
     fonte_jogo = pygame.font.SysFont("arial", tamanho, True, False)
     mensagem_tela = f"{pontuação}"
     pontos_forma = fonte_jogo.render(mensagem_tela, True, cor)
     return pontos_forma
-
-
-
-
-# grupos
-grupo_imagens = pygame.sprite.Group()
-inimigos = pygame.sprite.Group()
-pontinhos = pygame.sprite.Group()
 
 #gerando o pacman
 pacman = Pacman()
@@ -281,7 +289,6 @@ grupo_imagens.add(pacman)
 # gerando moedas
 moeda = Moedas()
 grupo_imagens.add(moeda)
-
 pontinhos.add(moeda)
 
 # gerando inimigo vermelho  
@@ -314,6 +321,8 @@ for i in range(variaveis.largura*2//64):
 # fps do jogo
 relogio = pygame.time.Clock()
 
+
+
 # loop principal do jogo
 while True:
     relogio.tick(variaveis.fps)
@@ -329,32 +338,56 @@ while True:
                 else:
                     pacman.pular()
 
-
-    if inimigo_amarelo.rect.topright[0] <= 0 : 
-        ale()
-    elif inimigo_azul.rect.topright[0] <= 0:
-        ale()
-    elif inimigo_rosa.rect.topright[0] <= 0:
-        ale()    
-    elif inimigo_vermelho.rect.topright[0] <= 0:
-        ale()
-    elif moeda.rect.topright[0] <= 0:
-        ale()
-
-    # adcionar sprite na tela
-    grupo_imagens.draw(tela)
-
+    #colisões 
     colidindo = pygame.sprite.spritecollide(pacman, inimigos, False, pygame.sprite.collide_mask)
     colidindo_moeda = pygame.sprite.spritecollide(pacman, pontinhos, True, pygame.sprite.collide_mask)
+    
+    #texto
+    texto = textinho_tela(variaveis.pontos, 45, variaveis.branco)
 
-    if colidindo_moeda:  
+
+    #colisão da moeda 
+    if colidindo_moeda:
+        variaveis.pontos += 1
+        ale()     
+
+    if inimigo_amarelo.rect.topright[0] <= 0:
+        ale() 
+    elif inimigo_azul.rect.topright[0] <= 0 : 
         ale()
-        grupo_imagens.update()   
-
+    elif inimigo_rosa.rect.topright[0] <= 0 :
+        ale()
+    elif inimigo_vermelho.rect.topright[0] <= 0:   
+        ale()
+    elif moeda.rect.topright[0]<= 0:
+        ale()
+         
+    
+        
+    
+    # adcionar sprite na tela
+    grupo_imagens.draw(tela)
+    
+    #colidindo com o inimigo 
     if colidindo:  
-        pass  
-    else:
+        pass
+        
+    else:   
         grupo_imagens.update()
+        variaveis.pontos_total += 1
+
+    #velocidade do jogo 
+    if variaveis.pontos_total % 120 == 0:
+        variaveis.velocidade += 1
+    
+
+        
+
+    #texto na tela 
+    tela.blit(texto, (520,30))
+   
+
+   
     
 
     # atualizar a tela
