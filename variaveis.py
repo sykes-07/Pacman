@@ -24,3 +24,5 @@ velocidade = 8
 
 #
 npc = ["vermelho", "rosa", "amarelo", "azul","moedinha"]
+
+teste = False
